@@ -17,14 +17,14 @@ var mediator = new Mediator();
 /**
  * Subscribe to namespace `user`.
  */
-mediator.sub('user', function (username) {
+mediator.on('user', function (username) {
   console.log('something is happened with user ' + username + '!');
 });
 
 /**
  * Subscribe to namespace `user::signout`.
  */
-mediator.sub('user::signout', function (username, date) {
+mediator.on('user::signout', function (username, date) {
   console.log('user ' + username + ' signed out at ' + date);
 });
 
@@ -32,7 +32,7 @@ mediator.sub('user::signout', function (username, date) {
  * Publish on namespace `chat::message`.
  * Both `chat` and `chat::message` will be triggered
  */
-mediator.pub('user::signout', 'user123', new Date());
+mediator.trigger('user::signout', 'user123', new Date());
 ```
 
 ### API
@@ -43,13 +43,17 @@ Subscribe to given namespace `ns`.
 
 `callback` will be called with `context` (if given) on given namespace `ns` or sub-namespace.
 
+#### `Mediator#once(ns, callback, [context])`
+
+Same as `Mediator#on` but triggers only once.
+
 #### `Mediator#off(ns, [callback])`
 
 Unsubscribe all subscription for given namespace `ns`.
 
 If `callback` given, will unsubscribe only subscription for given namespace *and* callback.
 
-#### `Mediator#emit(ns, [...])`
+#### `Mediator#trigger(ns, [...])`
 
 Call all callbacks for given namespace `ns` and its parents, if subscribed.
 
