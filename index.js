@@ -96,9 +96,9 @@ Mediator.prototype.trigger = function (ns) {
   for (var nsIndex = 0, nsLen = ns.length; nsIndex < nsLen; nsIndex += 1) {
     subs = this.subs[ns.join(this.config.delimiter)];
 
-    if (! subs) {
-      ns.pop();
+    ns.pop();
 
+    if (! subs) {
       continue;
     }
 
