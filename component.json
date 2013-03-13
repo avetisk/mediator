@@ -1,0 +1,15 @@
+{
+  "name": "mediator",
+  "version": "0.0.1",
+  "repo": "avetisk/mediator",
+  "description": "Namespaced pub/sub",
+  "keywords": [
+    "mediator",
+    "pubsub",
+    "events"
+  ],
+  "dependencies": {
+    "avetisk/defaults": "*"
+  },
+  "scripts": ["index.js"]
+}

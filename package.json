@@ -1,0 +1,16 @@
+{
+  "name": "mediator",
+  "version": "0.0.1",
+  "repo": "avetisk/mediator",
+  "description": "Namespaced pub/sub",
+  "devDependencies": {
+    "mocha-phantomjs": "*",
+    "mocha": "*",
+    "chai": "*"
+  },
+  "component": {
+    "scripts": {
+      "mediator": "index.js"
+    }
+  }
+}
