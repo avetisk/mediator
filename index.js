@@ -2,20 +2,31 @@
 
 var defaults = require('defaults');
 
+/**
+ * Default config
+ */
+var defaultConfig = {
+  'delimiter': '::'
+};
+
+/**
+ * Expose `Mediator`
+ */
 var Mediator = function (config) {
   this.subs = {};
-  this.config = defaults(config || {}, Mediator.config);
+  this.config = defaults(config || {}, defaultConfig);
 };
 
 module.exports = Mediator;
 
 /**
- * Default config
+ * Subscribe
+ *
+ * @param {String} ns Namespace
+ * @param {Function} callback Subscribe for a specific callback (optional)
+ * @param {Mixed} context Callback context (optional)
+ * @return {Mediator}
  */
-Mediator.prototype.config = {
-  'delimiter': '::'
-};
-
 Mediator.prototype.on = function (ns, callback, context, once) {
   this.subs[ns] = this.subs[ns] || [];
   this.subs[ns].push({
@@ -27,10 +38,28 @@ Mediator.prototype.on = function (ns, callback, context, once) {
   return this;
 };
 
+/**
+ * Subscribe once
+ *
+ * @param {String} ns Namespace
+ * @param {Function} callback Subscribe for a specific callback (optional)
+ * @param {Mixed} context Callback context (optional)
+ * @return {Mediator}
+ */
 Mediator.prototype.once = function (ns, callback, context) {
   this.on(ns, callback, context, true);
+
+  return this;
 };
 
+/**
+ * Unbscribe
+ *
+ * @param {String} ns Namespace
+ * @param {Function} callback Unsubscribe for a specific callback (optional)
+ * @return {Mediator}
+ * @api public
+ */
 Mediator.prototype.off = function (ns, callback) {
   if (! callback) {
     this.subs[ns] = null;
@@ -52,10 +81,17 @@ Mediator.prototype.off = function (ns, callback) {
   return this;
 };
 
+/**
+ * Trigger
+ *
+ * @param {String} ns Namespace
+ * @return {Mediator}
+ * @api public
+ */
 Mediator.prototype.trigger = function (ns) {
-  ns = ns.split(this.config.delimiter);
   var subs;
   var sub;
+  ns = ns.split(this.config.delimiter);
 
   for (var nsIndex = 0, nsLen = ns.length; nsIndex < nsLen; nsIndex += 1) {
     subs = this.subs[ns.join(this.config.delimiter)];
@@ -70,7 +106,7 @@ Mediator.prototype.trigger = function (ns) {
       sub = subs[subIndex];
       sub.callback.apply(
         sub.context,
-        Array.prototype.slice.call(arguments, 1)
+        Array.prototype.slice.call(arguments)
       );
 
       if (sub.once) {
@@ -78,4 +114,6 @@ Mediator.prototype.trigger = function (ns) {
       }
     }
   }
+
+  return this;
 };
