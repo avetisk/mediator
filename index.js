@@ -53,6 +53,36 @@ Mediator.prototype.once = function (ns, callback, context) {
 };
 
 /**
+ * Subscribe to multiple events but once
+ *
+ * @param {Array} requiredNs Array of namespaces
+ * @param {Function} callback Subscribe for a specific callback (optional)
+ * @param {Mixed} context Callback context (optional)
+ * @return {Mediator}
+ */
+Mediator.prototype.require = function (requiredNs, callback, context) {
+  var ns;
+
+  for (var i = 0, len = requiredNs.length; i < len; i += 1) {
+    ns = requiredNs[i];
+
+    this.once(ns, function (ns) {
+      var index = requiredNs.indexOf(ns);
+
+      console.log(requiredNs);
+
+      requiredNs.splice(index, 1);
+
+      if (requiredNs.length === 0) {
+        callback.call(context);
+      }
+    }, context);
+  }
+
+  return this;
+};
+
+/**
  * Unbscribe
  *
  * @param {String} ns Namespace
@@ -104,13 +134,20 @@ Mediator.prototype.trigger = function (ns) {
 
     for (var subIndex = 0, subLen = subs.length; subIndex < subLen; subIndex += 1) {
       sub = subs[subIndex];
+
+      // NOTE: may happen if subs are changed (e.g below with sub.once)
+      if (! sub) {
+        continue;
+      }
+
       sub.callback.apply(
         sub.context,
         Array.prototype.slice.call(arguments)
       );
 
       if (sub.once) {
-        subs.slice(subIndex, 1);
+        subs.splice(subIndex, 1);
+        subIndex -= 1;
       }
     }
   }
