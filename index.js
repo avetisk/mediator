@@ -69,8 +69,6 @@ Mediator.prototype.require = function (requiredNs, callback, context) {
     this.once(ns, function (ns) {
       var index = requiredNs.indexOf(ns);
 
-      console.log(requiredNs);
-
       requiredNs.splice(index, 1);
 
       if (requiredNs.length === 0) {
