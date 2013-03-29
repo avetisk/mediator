@@ -66,6 +66,7 @@ Mediator.prototype.require = function (requiredNs, callback, context) {
   for (var i = 0, len = requiredNs.length; i < len; i += 1) {
     ns = requiredNs[i];
 
+    /*jshint loopfunc: true*/
     this.once(ns, function (ns) {
       var index = requiredNs.indexOf(ns);
 
